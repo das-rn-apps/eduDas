@@ -1,8 +1,8 @@
 import React, { useState, useContext } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Platform, Alert, Pressable } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, Platform, Alert, Pressable, TouchableOpacity } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { ThemeContext } from '../../Context/ThemeContext'; // Import ThemeContext
+import { ThemeContext, ThemeType } from '../../Context/ThemeContext';
 import { Picker } from '@react-native-picker/picker';
 import { userTypes } from '@/Constants/User';
 
@@ -26,7 +26,8 @@ const StudentSignupForm: React.FC<StudentSignupFormProps> = ({ onSubmit }) => {
     const [dateOfBirth, setDateOfBirth] = useState<Date | null>(null);
     const [showPicker, setShowPicker] = useState<boolean>(false);
 
-    const { theme } = useContext(ThemeContext); // Access the color context
+    const { theme } = useContext(ThemeContext);
+    const styles = createStyles(theme);
 
     const handleDateChange = (event: any, selectedDate?: Date) => {
         const currentDate = selectedDate || new Date();
@@ -53,108 +54,174 @@ const StudentSignupForm: React.FC<StudentSignupFormProps> = ({ onSubmit }) => {
     };
 
     return (
-        <View style={[styles.container, { backgroundColor: theme.colors.surface }]}>
-            <Text style={[styles.label, { color: theme.textColors.primaryText }]}>User type</Text>
-            <Picker
-                selectedValue={type}
-                onValueChange={(itemValue) => setType(itemValue)}
-                style={[styles.input, { borderColor: theme.borderColors.defaultBorder, color: theme.textColors.primaryText }]}
-            >
-                {userTypes?.map(option => (
-                    <Picker.Item key={option.value} label={option.label} value={option.value} />
-                ))}
-            </Picker>
-            <Text style={[styles.label, { color: theme.textColors.primaryText }]}>First Name</Text>
-            <TextInput
-                style={[styles.input, { borderColor: theme.borderColors.defaultBorder, color: theme.textColors.primaryText }]}
-                placeholder="Enter your first name"
-                placeholderTextColor={theme.textColors.placeholderText}
-                value={firstName}
-                onChangeText={setFirstName}
-            />
-            <Text style={[styles.label, { color: theme.textColors.primaryText }]}>Last Name</Text>
-            <TextInput
-                style={[styles.input, { borderColor: theme.borderColors.defaultBorder, color: theme.textColors.primaryText }]}
-                placeholder="Enter your last name"
-                placeholderTextColor={theme.textColors.placeholderText}
-                value={lastName}
-                onChangeText={setLastName}
-            />
-            <Text style={[styles.label, { color: theme.textColors.primaryText }]}>Email address</Text>
-            <TextInput
-                style={[styles.input, { borderColor: theme.borderColors.defaultBorder, color: theme.textColors.primaryText }]}
-                placeholder="Enter your email"
-                placeholderTextColor={theme.textColors.placeholderText}
-                value={email}
-                onChangeText={setEmail}
-                keyboardType="email-address"
-                autoCapitalize="none"
-            />
-            <Text style={[styles.label, { color: theme.textColors.primaryText }]}>Password</Text>
-            <TextInput
-                style={[styles.input, { borderColor: theme.borderColors.defaultBorder, color: theme.textColors.primaryText }]}
-                placeholder="Enter your password"
-                placeholderTextColor={theme.textColors.placeholderText}
-                value={password}
-                onChangeText={setPassword}
-                secureTextEntry
-                autoCapitalize="none"
-            />
-            <Text style={[styles.label, { color: theme.textColors.primaryText }]}>Date of Birth</Text>
-            <View style={styles.dateContainer}>
-                <TextInput
-                    style={[styles.input, styles.dateInput, { borderColor: theme.borderColors.defaultBorder, color: theme.textColors.primaryText }]}
-                    placeholder="Enter date 2000-01-13"
-                    value={dateOfBirth ? dateOfBirth.toISOString().split('T')[0] : ''}
-                    editable={false}
-                    placeholderTextColor={theme.textColors.placeholderText}
-                />
-                <Pressable onPress={() => setShowPicker(true)}>
-                    <FontAwesome name="calendar" size={38} color={theme.colors.primary} />
-                </Pressable>
+        <View style={styles.all}>
+            <View>
+                <Text style={styles.header}>Login</Text>
             </View>
-            {showPicker && (
-                <DateTimePicker
-                    value={dateOfBirth || new Date()}
-                    mode="date"
-                    display="default"
-                    onChange={handleDateChange}
-                />
-            )}
-            <Button
-                title="Sign Up"
-                onPress={handleSubmit}
-                color={theme.buttonColors.primaryButtonBackground}
-            />
+            <View style={styles.container}>
+                <Text style={styles.header}>Registration</Text>
+                <View style={styles.formGroup}>
+                    <Text style={styles.label}>User type</Text>
+                    <Picker
+                        selectedValue={type}
+                        onValueChange={(itemValue) => setType(itemValue)}
+                        style={styles.input}
+                    >
+                        {userTypes?.map(option => (
+                            <Picker.Item key={option.value} label={option.label} value={option.value} />
+                        ))}
+                    </Picker>
+                </View>
+
+                <View style={styles.formGroup}>
+                    <Text style={styles.label}>First Name</Text>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Enter your first name"
+                        placeholderTextColor={theme.textColors.placeholderText}
+                        value={firstName}
+                        onChangeText={setFirstName}
+                    />
+                </View>
+
+                <View style={styles.formGroup}>
+                    <Text style={styles.label}>Last Name</Text>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Enter your last name"
+                        placeholderTextColor={theme.textColors.placeholderText}
+                        value={lastName}
+                        onChangeText={setLastName}
+                    />
+                </View>
+                <View style={styles.formGroup}>
+                    <Text style={styles.label}>Email address</Text>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Enter your email"
+                        placeholderTextColor={theme.textColors.placeholderText}
+                        value={email}
+                        onChangeText={setEmail}
+                        keyboardType="email-address"
+                        autoCapitalize="none"
+                    />
+                </View>
+                <View style={styles.formGroup}>
+                    <Text style={styles.label}>Password</Text>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Enter your password"
+                        placeholderTextColor={theme.textColors.placeholderText}
+                        value={password}
+                        onChangeText={setPassword}
+                        secureTextEntry
+                        autoCapitalize="none"
+                    />
+                </View>
+                <View style={styles.formGroup}>
+                    <View style={styles.dateContainer}>
+                        <TextInput
+                            style={styles.dateInput}
+                            placeholder="Enter date 2000-01-13"
+                            value={dateOfBirth ? dateOfBirth.toISOString().split('T')[0] : ''}
+                            editable={false}
+                            placeholderTextColor={theme.textColors.placeholderText}
+                        />
+                        <Pressable onPress={() => setShowPicker(true)}>
+                            <FontAwesome name="calendar" size={38} color={theme.colors.primary} />
+                        </Pressable>
+                    </View>
+                    {showPicker && (
+                        <DateTimePicker
+                            value={dateOfBirth || new Date()}
+                            mode="date"
+                            display="default"
+                            onChange={handleDateChange}
+                        />
+                    )}
+                </View>
+            </View>
+            <View>
+                <TouchableOpacity
+                    style={styles.button}
+                    onPress={handleSubmit}
+                >
+                    <Text style={styles.buttonText}>Register</Text>
+                </TouchableOpacity>
+            </View>
         </View>
     );
 };
 
-const styles = StyleSheet.create({
-    container: {
-        width: '100%',
-        padding: 16,
-        borderRadius: 4,
-    },
-    label: {
-        fontSize: 16,
-        marginBottom: 8,
-    },
-    input: {
-        height: 40,
-        borderWidth: 1,
-        borderRadius: 4,
-        paddingHorizontal: 8,
-        marginBottom: 16,
-    },
-    dateContainer: {
-        flexDirection: 'row',
-        gap: 5
-        // alignItems: 'center',
-    },
-    dateInput: {
-        flex: 1,
-    },
-});
+const createStyles = (theme: ThemeType) =>
+    StyleSheet.create({
+        all: {
+            flex: 1,
+            gap: 10,
+            justifyContent: "center"
+        },
+        container: {
+            width: '100%',
+            padding: 16,
+            borderRadius: 8,
+            backgroundColor: theme.colors.surface,
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.2,
+            shadowRadius: 4,
+            elevation: 5,
+        },
+        formGroup: {
+            marginBottom: 16,
+        },
+        header: {
+            fontSize: 24,
+            fontWeight: 'bold',
+            marginBottom: 20,
+            textAlign: "center",
+            color: theme.textColors.primaryText,
+        },
+        label: {
+            fontSize: 16,
+            marginBottom: 8,
+        },
+        input: {
+            height: 40,
+            borderWidth: 0.5,
+            borderRadius: 7,
+            paddingHorizontal: 12,
+            marginBottom: 8,
+            borderColor: theme.borderColors.defaultBorder,
+            color: theme.textColors.primaryText,
+        },
+        dateContainer: {
+            flexDirection: 'row',
+            alignItems: 'center',
+            marginBottom: 16,
+        },
+        dateInput: {
+            flex: 1,
+            height: 40,
+            borderWidth: 1,
+            borderRadius: 7,
+            paddingHorizontal: 8,
+            borderColor: theme.borderColors.defaultBorder,
+            color: theme.textColors.primaryText,
+            marginRight: 10,
+        },
+        button: {
+            height: 48,
+            borderRadius: 8,
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: theme.buttonColors.successButtonBackground,
+            marginBottom: 12,
+        },
+        buttonText: {
+            fontSize: 16,
+            fontWeight: 'bold',
+            color: theme.buttonColors.primaryButtonText,
+        },
+    });
 
 export default StudentSignupForm;

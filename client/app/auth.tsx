@@ -1,10 +1,10 @@
 import React, { useState, useContext } from 'react';
 import axios from 'axios';
 import { View, Text, Button, Alert, StyleSheet, ScrollView, SafeAreaView } from 'react-native';
-import { useAuth } from '../Context/AuthContext';
-import { ThemeContext } from '../Context/ThemeContext';
-import StudentLoginForm from '../Components/Login/StudentLoginForm';
-import StudentSignupForm from '../Components/Login/StudentSignupForm';
+import { useAuth } from '@/Context/AuthContext';
+import { ThemeContext } from '@/Context/ThemeContext';
+import StudentLoginForm from '@/Components/Login/StudentLoginForm';
+import StudentSignupForm from '@/Components/Login/StudentSignupForm';
 import { router } from 'expo-router';
 import { BASE_URL } from '@env';
 import Loader from '@/Components/General/Loader';
@@ -91,9 +91,6 @@ export default function Auth() {
                 <Loader text={isSignup ? "Creating Account..." : "Authenticating..."} />
             ) : (
                 <ScrollView contentContainerStyle={styles.innerContainer}>
-                    <Text style={[styles.title, { color: theme.textColors.primaryText }]}>
-                        {isSignup ? 'Create Your Account' : 'Login to Your Account'}
-                    </Text>
                     {isSignup ? (
                         <StudentSignupForm onSubmit={handleSignup} />
                     ) :
@@ -106,7 +103,7 @@ export default function Auth() {
                                 style={[styles.link, { color: theme.textColors.linkText }]}
                                 onPress={() => setIsSignup(!isSignup)}
                             >
-                                {isSignup ? 'Login' : 'Sign Up'}
+                                {isSignup ? 'Login' : 'Register'}
                             </Text>
                         </Text>
                     </View>

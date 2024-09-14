@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
-import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
-import { ThemeContext } from '../../Context/ThemeContext'; // Import ThemeContext
+import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity } from 'react-native';
+import { ThemeContext, ThemeType } from '../../Context/ThemeContext'; // Import ThemeContext
 
 interface StudentLoginFormProps {
     onSubmit: (formData: { email: string; password: string }) => void;
@@ -11,74 +11,127 @@ const StudentLoginForm: React.FC<StudentLoginFormProps> = ({ onSubmit }) => {
     // const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('das');
     // const [password, setPassword] = useState<string>('');
-    const [error, setError] = useState<string>(''); // State to handle form validation errors
+    const [error, setError] = useState<string>('');
 
-    const { theme } = useContext(ThemeContext); // Access the color context
+    const { theme } = useContext(ThemeContext);
+    const styles = createStyles(theme);
 
     const handleSubmit = () => {
         if (!email || !password) {
-            setError('Please fill in all fields.'); // Set error message if fields are empty
+            setError('Please fill in all fields.');
             return;
         }
-        setError(''); // Clear any previous errors
+        setError('');
         const formData = { email, password };
-        onSubmit(formData); // Call the onSubmit function passed as a prop
+        onSubmit(formData);
     };
 
     return (
-        <View style={[styles.container, { backgroundColor: theme.colors.surface }]}>
-            <Text style={[styles.label, { color: theme.textColors.primaryText }]}>Email address</Text>
-            <TextInput
-                style={[styles.input, { borderColor: theme.borderColors.defaultBorder }]}
-                placeholder="Enter your email"
-                placeholderTextColor={theme.textColors.placeholderText}
-                value={email}
-                onChangeText={setEmail}
-                keyboardType="email-address"
-                autoCapitalize="none"
-            />
-            <Text style={[styles.label, { color: theme.textColors.primaryText }]}>Password</Text>
-            <TextInput
-                style={[styles.input, { borderColor: theme.borderColors.defaultBorder }]}
-                placeholder="Enter your password"
-                placeholderTextColor={theme.textColors.placeholderText}
-                value={password}
-                onChangeText={setPassword}
-                secureTextEntry
-                autoCapitalize="none"
-            />
-            {error ? (
-                <Text style={[styles.error, { color: theme.colors.error }]}>{error}</Text> // Display error message if any
-            ) : null}
-            <Button
-                title="Login"
-                onPress={handleSubmit}
-                color={theme.buttonColors.primaryButtonBackground}
-            />
+        <View style={styles.all}>
+            <View>
+                <Text style={styles.header}>Login</Text>
+            </View>
+            <View style={styles.container}>
+                <View style={styles.formGroup}>
+                    <Text style={styles.label}>Email address</Text>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Enter your email"
+                        placeholderTextColor={theme.textColors.placeholderText}
+                        value={email}
+                        onChangeText={setEmail}
+                        keyboardType="email-address"
+                        autoCapitalize="none"
+                    />
+                </View>
+                <View style={styles.formGroup}>
+                    <Text style={styles.label}>Password</Text>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Enter your password"
+                        placeholderTextColor={theme.textColors.placeholderText}
+                        value={password}
+                        onChangeText={setPassword}
+                        secureTextEntry
+                        autoCapitalize="none"
+                    />
+                </View>
+                {error ? (
+                    <Text style={styles.error}>{error}</Text>
+                ) : null}
+            </View>
+            <View>
+                <TouchableOpacity
+                    style={styles.button}
+                    onPress={handleSubmit}
+                >
+                    <Text style={styles.buttonText}>Login</Text>
+                </TouchableOpacity>
+            </View>
         </View>
     );
 };
 
-const styles = StyleSheet.create({
-    container: {
-        width: '100%',
-        padding: 16,
-        borderRadius: 4,
-    },
-    label: {
-        fontSize: 16,
-        marginBottom: 8,
-    },
-    input: {
-        height: 40,
-        borderWidth: 1,
-        borderRadius: 4,
-        paddingHorizontal: 8,
-        marginBottom: 16,
-    },
-    error: {
-        marginBottom: 16,
-    },
-});
+const createStyles = (theme: ThemeType) =>
+    StyleSheet.create({
+        all: {
+            flex: 1,
+            gap: 10,
+            justifyContent: "center"
+        },
+        container: {
+            width: '100%',
+            padding: 20,
+            borderRadius: 8,
+            backgroundColor: theme.colors.surface,
+            shadowColor: theme.colors.primary,
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.2,
+            shadowRadius: 4,
+            elevation: 5,
+        },
+        header: {
+            fontSize: 24,
+            fontWeight: 'bold',
+            marginBottom: 20,
+            textAlign: "center",
+            color: theme.textColors.primaryText,
+        },
+        formGroup: {
+            marginBottom: 16,
+        },
+        label: {
+            fontSize: 16,
+            fontWeight: '600',
+            color: theme.textColors.primaryText,
+        },
+        input: {
+            height: 40,
+            borderWidth: 0.5,
+            borderRadius: 7,
+            paddingHorizontal: 12,
+            marginBottom: 8,
+            borderColor: theme.borderColors.defaultBorder,
+            color: theme.textColors.primaryText,
+        },
+        error: {
+            fontSize: 14,
+            marginBottom: 16,
+            color: theme.colors.error,
+        },
+        button: {
+            height: 45,
+            borderRadius: 8,
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: theme.buttonColors.primaryButtonBackground,
+            marginTop: 10
+        },
+        buttonText: {
+            color: theme.textColors.primaryText,
+            fontSize: 16,
+            fontWeight: 'bold',
+        },
+    });
 
 export default StudentLoginForm;
